@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ユーザ情報詳細</title>
+<link
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+<body>
+
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbarEexample1">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="./userList.html">ユーザ管理システム</a>
+			</div>
+			<div class="collapse navbar-collapse" id="navbarEexample5">
+				<a href="./index.html" class="btn btn-default navbar-btn navbar-right">Logout</a>
+				<p class="navbar-text navbar-right">ユーザ名 さん</p>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="rowHeightEm">
+			<div class="col-xs-12" style="height: 5em;"></div>
+		</div>
+		<div class="pageTitle">
+			<div class="col-xs-12" style="height: 9em;">
+				<h1 class="text-center">ユーザ情報詳細参照</h1>
+			</div>
+		</div>
+		<div class="main">
+
+			<div class="col-xs-12">
+				<form class="form-horizontal" action="userList.html">
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="InputEmail">Login
+							ID</label>
+						<div class="col-sm-7">
+							<p>id0001</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="InputUserName">User
+							name</label>
+						<div class="col-sm-7">
+							<p>田中太郎</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="InputUserName">Birthday</label>
+						<div class="col-sm-7">
+							<p>1999年04月26日</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="InputAddDay">登録日</label>
+						<div class="col-sm-7">
+							<p>1999年04月26日　9:00</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="InputAddDay">更新日</label>
+						<div class="col-sm-7">
+							<p>2017年09月5日　13:00</p>
+						</div>
+					</div>
+
+				</form>
+			</div>
+			<div class="col-xs-10 col-xs-offset-1">
+				<hr>
+				<a href="./userList.html" class="btn btn-default">Back</a>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
