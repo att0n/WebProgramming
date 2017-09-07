@@ -42,6 +42,9 @@
 		<div class="col-xs-12" style="height: 9em;"><h1 class="text-center">ログイン画面</h1></div>
 	</div>
 	<div class="main">
+		<div class="col-xs-8 col-sm-offset-2">
+			<div class="alert alert-danger" role="alert"><strong>Error</strong>：　ログインIDが存在しない　もしくは　ログインIDまたはパスワードの組み合わせが異なっています。</div>
+		</div>
 		<div class="col-xs-12">
 			<form class="form-horizontal" action="./LoginSarvlet2" method="post">
 

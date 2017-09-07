@@ -11,6 +11,16 @@ public class user implements Serializable {
 	private String create_date;
 	private String update_date;
 
+	public user() {
+
+	}
+
+	public user(String login_id,String name,String password) {
+		this.login_id = login_id;
+		this.name=name;
+		this.password = password;
+	}
+
 	public user(int id,String login_id,String name,String birth_date,String password,String create_date,String update_date) {
 		this.id = id;
 		this.login_id = login_id;
