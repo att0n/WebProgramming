@@ -1,7 +1,6 @@
 package sarvlet;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,8 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import common.Encryption;
 import dao.UserDao;
-import model.user;
+import model.User;
 
 /**
  * Servlet implementation class LoginSarvlet2
@@ -26,48 +26,36 @@ public class LoginSarvlet2 extends HttpServlet {
 	 */
 	public LoginSarvlet2() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		request.setCharacterEncoding("UTF-8");
-	}
-
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
+
+		request.setCharacterEncoding("UTF-8");
 		String loginID = request.getParameter("loginID");
 		String password = request.getParameter("password");
 		UserDao userDao = new UserDao();
+		HttpSession session = request.getSession();
 
-		int i = Integer.parseInt(userDao.checkUser(loginID, password));
-		System.out.println(i);
+		User u = userDao.searchLoginID(loginID);
+		if(u.getPassword().equals(Encryption.encryption(password))) {
+			//System.out.println("ログイン成功");
 
-		if(i==1) {
-			List<user> userList = userDao.searchIdPassword(loginID, password);
-
-			HttpSession session = request.getSession();
-			session.setAttribute("loginUser", userList.get(0).getName());
-			//System.out.println(userList.get(0).getName());
+			session.setAttribute("loginUser", u);
 
 			String url = "./UserListServlet";
 			response.sendRedirect(url);
+		}else {
+			//System.out.println("ログイン失敗");
+			request.setAttribute("login", true);
 
-		}else if(i==0){
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/index2.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/index.jsp");
 			dispatcher.forward(request, response);
 		}
+
 	}
 
 }

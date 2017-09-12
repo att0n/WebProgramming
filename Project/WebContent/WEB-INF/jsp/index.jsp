@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-<%@ page import="model.user"%>
+<%@ page import="model.User"%>
 <%@ page import="java.util.ArrayList" %>
 <%
 	request.setCharacterEncoding("UTF-8");
-
-	ArrayList<user> u = (ArrayList<user>)request.getAttribute("userList");
+	ArrayList<User> u = (ArrayList<User>)request.getAttribute("userList");
 %>
 
 <!DOCTYPE html>
@@ -42,6 +41,14 @@
 		<div class="col-xs-12" style="height: 9em;"><h1 class="text-center">ログイン画面</h1></div>
 	</div>
 	<div class="main">
+		<%if(request.getAttribute("logout")==null){
+		}else if((boolean)request.getAttribute("logout")){
+			out.println("<div class='col-xs-8 col-sm-offset-2'><div class='alert alert-success' role='alert'><strong>Success</strong>：　ログアウトしました</div></div>");
+		}%>
+		<%if(request.getAttribute("login")==null){
+		}else if((boolean)request.getAttribute("login")){
+			out.println("<div class='col-xs-8 col-sm-offset-2'><div class='alert alert-danger' role='alert'><strong>Error</strong>：　ログインIDが存在しない　もしくは　ログインIDまたはパスワードの組み合わせが異なっています。</div></div>");
+		}%>
 		<div class="col-xs-12">
 			<form class="form-horizontal" action="./LoginSarvlet2" method="post">
 

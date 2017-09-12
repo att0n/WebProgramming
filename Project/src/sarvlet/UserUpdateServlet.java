@@ -10,19 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dao.UserDao;
 import model.User;
 
 /**
- * Servlet implementation class LoginSarvlet
+ * Servlet implementation class UserUpdateServlet
  */
-@WebServlet("/LoginSarvlet")
-public class LoginSarvlet extends HttpServlet {
+@WebServlet("/UserUpdateServlet")
+public class UserUpdateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public LoginSarvlet() {
+	public UserUpdateServlet() {
 		super();
 	}
 
@@ -34,15 +35,21 @@ public class LoginSarvlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
-		User u = (User)session.getAttribute("loginUser");
-		System.out.println("ログインユーザ："+ u);
+		User user = (User) session.getAttribute("loginUser");
 
-		if(u==null) {
+		if (user == null) {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/index.jsp");
 			dispatcher.forward(request, response);
-		}else {
-			String url = "./UserListServlet";
-			response.sendRedirect(url);
+		} else {
+			request.setCharacterEncoding("UTF-8");
+			int id = Integer.parseInt(request.getParameter("id"));
+			UserDao userDao = new UserDao();
+			User u = userDao.searchID(id);
+			request.setAttribute("user", u);
+
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userUpdate.jsp");
+			dispatcher.forward(request, response);
 		}
 	}
+
 }

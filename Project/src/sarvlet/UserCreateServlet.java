@@ -13,16 +13,16 @@ import javax.servlet.http.HttpSession;
 import model.User;
 
 /**
- * Servlet implementation class LoginSarvlet
+ * Servlet implementation class UserCreateServlet
  */
-@WebServlet("/LoginSarvlet")
-public class LoginSarvlet extends HttpServlet {
+@WebServlet("/UserCreateServlet")
+public class UserCreateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public LoginSarvlet() {
+	public UserCreateServlet() {
 		super();
 	}
 
@@ -32,17 +32,20 @@ public class LoginSarvlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		HttpSession session = request.getSession();
-		User u = (User)session.getAttribute("loginUser");
-		System.out.println("ログインユーザ："+ u);
+		User user = (User) session.getAttribute("loginUser");
 
-		if(u==null) {
+		if (user == null) {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/index.jsp");
 			dispatcher.forward(request, response);
-		}else {
-			String url = "./UserListServlet";
-			response.sendRedirect(url);
+		} else {
+			User u = new User();
+			u.setLogin_id("loginID");
+			u.setName("user name");
+			request.setAttribute("user", u);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userCreate.jsp");
+			dispatcher.forward(request, response);
 		}
 	}
+
 }

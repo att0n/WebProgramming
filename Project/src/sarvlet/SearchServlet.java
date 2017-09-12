@@ -9,9 +9,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.UserDao;
-import model.user;
+import model.User;
 
 /**
  * Servlet implementation class SearchServlet
@@ -20,44 +21,139 @@ import model.user;
 public class SearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public SearchServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
+	public SearchServlet() {
+		super();
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-		String lId = request.getParameter("SearchLoginId");
-		String n = request.getParameter("SearchName");
-		String b1 = request.getParameter("birth01");
-		String b2 = request.getParameter("birth02");
-		//System.out.println(lId);
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("loginUser");
 
-		UserDao userDao = new UserDao();
-		if(lId!="") {
-			List<user> userList = userDao.searchLoginID(lId);
-			//System.out.println(userList.get(0).getId());
-			//System.out.println(userList.get(0).getName());
-			//System.out.println(userList.get(0).getBirth_date());
-			request.setAttribute("userList", userList);
-
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+		if (user == null) {
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/index.jsp");
 			dispatcher.forward(request, response);
+		} else {
+			request.setCharacterEncoding("UTF-8");
+			String logID = request.getParameter("SearchLoginId");
+			String name = request.getParameter("SearchName");
+			String birth1 = request.getParameter("birth01");
+			String birth2 = request.getParameter("birth02");
+			boolean noRecord = false;
+
+			UserDao userDao = new UserDao();
+			if (logID == "" && name == "" && birth1 == "" && birth2 == "") {
+				List<User> userList = userDao.findAll();
+				request.setAttribute("userList", userList);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+				dispatcher.forward(request, response);
+			} else if (logID != "" && name != "" && birth1 != "" && birth2 != "") {
+				if (userDao.checkUser(logID, name, birth1, birth2)) {
+					List<User> userList = userDao.searchUser(logID, name, birth1, birth2);
+					request.setAttribute("userList", userList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+					dispatcher.forward(request, response);
+				} else {
+					noRecord = true;
+				}
+			} else if (logID != "" && name != "") {
+				if (userDao.checkUserloginIDName(logID, name)) {
+					List<User> userList = userDao.searchUserLoginIDName(logID, name);
+					request.setAttribute("userList", userList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+					dispatcher.forward(request, response);
+				} else {
+					noRecord = true;
+				}
+			} else if (logID != "" && birth1 != "" && birth2 != "") {
+				if (userDao.checkUserloginIDBirthday(logID, birth1, birth2)) {
+					List<User> userList = userDao.searchUserLoginIDBirthday(logID, birth1, birth2);
+					request.setAttribute("userList", userList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+					dispatcher.forward(request, response);
+				} else {
+					noRecord = true;
+				}
+			} else if(birth1!="" && birth2=="") {
+				if(userDao.checkBirthday(birth1)) {
+					List<User> userList = userDao.searchBirthday(birth1);
+					request.setAttribute("userList", userList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+					dispatcher.forward(request, response);
+				} else {
+					noRecord = true;
+				}
+			} else if(birth1=="" && birth2!="") {
+
+				if(userDao.checkBirthday(birth1)) {
+					System.out.println("test");
+					List<User> userList = userDao.searchBirthday2(birth2);
+					request.setAttribute("userList", userList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+					dispatcher.forward(request, response);
+				} else {
+					noRecord = true;
+				}
+
+			} else if (name != "" && birth1 != "" && birth2 != "") {
+				if (userDao.checkUserNameBirthday(name, birth1, birth2)) {
+					List<User> userList = userDao.searchUserNameBirthday(name, birth1, birth2);
+					request.setAttribute("userList", userList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+					dispatcher.forward(request, response);
+				} else {
+					noRecord = true;
+				}
+			} else if (logID != "") {
+				User u = userDao.searchLoginID(logID);
+				if (u.getLogin_id() == null) {
+					noRecord = true;
+				} else {
+					List<User> userList = userDao.searchLoginID2(logID);
+					request.setAttribute("userList", userList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+					dispatcher.forward(request, response);
+				}
+			} else if (name != "") {
+				if (userDao.checkUserName(name)) {
+					List<User> userList = userDao.searchName(name);
+					request.setAttribute("userList", userList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+					dispatcher.forward(request, response);
+				} else {
+					noRecord = true;
+				}
+			} else if (birth1 != "" && birth2 != "") {
+				if (userDao.checkUserBirthday(birth1, birth2)) {
+					List<User> userList = userDao.searchBirthday(birth1, birth2);
+					request.setAttribute("userList", userList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+					dispatcher.forward(request, response);
+				} else {
+					noRecord = true;
+				}
+			} else {
+				noRecord = true;
+			}
+
+			if (noRecord) {
+				User formWord = new User();
+				formWord.setLogin_id(logID);
+				formWord.setName(name);
+				request.setAttribute("formWord", formWord);
+
+				request.setAttribute("noRecord", true);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/userList.jsp");
+				dispatcher.forward(request, response);
+			}
 		}
 	}
 
